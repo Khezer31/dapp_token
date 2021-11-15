@@ -15,7 +15,6 @@ import TextField from "@mui/material/TextField";
 import Snackbar from "@mui/material/Snackbar";
 import ShoppingCartImage from "@mui/icons-material/ShoppingCart";
 import TransferImage from "@mui/icons-material/SyncAlt";
-
 import { styled } from "@mui/system";
 import {
   Avatar,
@@ -91,9 +90,9 @@ function App() {
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
       setAddress(accounts[0]);
+      const networkId = await web3.eth.net.getId();
 
       // Instantiate GLX Contract
-      const networkId = await web3.eth.net.getId();
       const deployedNetwork = GalaxyCoin.networks[networkId];
       const instance = new web3.eth.Contract(
         GalaxyCoin.abi,
@@ -202,6 +201,17 @@ function App() {
     }
   };
 
+  const _withdraw = async () => {
+    try {
+      const response = await ICOContract.methods
+        .withdraw()
+        .send({ from: address });
+      console.log(response);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -211,6 +221,7 @@ function App() {
       <Typography variant="h3" fontWeight="bold">
         GalaxyCoin
       </Typography>
+      
       <Container>
         <Grid container spacing={2}>
           <Grid item xs={8} md={8} lg={8}>
@@ -228,7 +239,7 @@ function App() {
                   Total Supply : {Math.round(totalSupp / 10 ** 18)} GLX
                 </Typography>
                 <ButtonUnstyled
-                  style={{ margin: 8 }}
+                  style={{ margin: 8, backgroundColor: "#ffa726" }}
                   onClick={() => _getMaxSupply(contract)}
                   component={CustomButtonRoot}
                 >
@@ -253,6 +264,7 @@ function App() {
                     onChange={(t) => setQuantity(t.target.value)}
                   />
                   <ButtonUnstyled
+                    style={{ backgroundColor: "#388e3c" }}
                     onClick={_buyToken}
                     component={CustomButtonRoot}
                   >
@@ -287,6 +299,9 @@ function App() {
             </Card>
             <ButtonUnstyled onClick={_burnToken} component={CustomButtonRoot}>
               Burn500
+            </ButtonUnstyled>
+            <ButtonUnstyled onClick={_withdraw} component={CustomButtonRoot}>
+              Withdraw ETH
             </ButtonUnstyled>
           </Grid>
           <Grid item xs={4} md={4} lg={4}>

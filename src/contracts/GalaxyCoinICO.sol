@@ -10,7 +10,7 @@ contract GalaxyCoinICO is Ownable {
     uint256 public _rate = 2700; // 1 ETH == 2700 GLX
 
     constructor(address _tokenAddress) {
-       token = GalaxyCoin(_tokenAddress);
+        token = GalaxyCoin(_tokenAddress);
     }
 
     // Convert _weiamount into GLX Token amount and return the result
@@ -22,8 +22,13 @@ contract GalaxyCoinICO is Ownable {
         return _weiAmount.mul(_rate);
     }
 
+    function withdraw() external onlyOwner {
+        require(address(this).balance > 0 , "Balance is 0");
+        payable(owner()).transfer(address(this).balance);
+    }
+
     // when no other function matches (not even the receive function).
-    fallback () external payable {
+    fallback() external payable {
         uint256 _amount = 50 * (10**18);
         token.transfer(msg.sender, _amount);
     }
