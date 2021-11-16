@@ -60,11 +60,21 @@ module.exports = {
           },
           providerOrUrl:
             "https://ropsten.infura.io/v3/" + process.env.REACT_APP_INFURA_KEY,
-          // numberOfAddresses: 1,
-          // derivationPath: "m/44'/1'/0'/0/",
         });
       },
       network_id: 3,
+    },
+    rinkeby: {
+      provider: () => {
+        return new HDWalletProvider({
+          mnemonic: {
+            phrase: process.env.REACT_APP_MNEMONIC,
+          },
+          providerOrUrl:
+            "https://rinkeby.infura.io/v3/" + process.env.REACT_APP_INFURA_KEY,
+        });
+      },
+      network_id: 4,
     },
     // Another network with more advanced options...
     // advanced: {
